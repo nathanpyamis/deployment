@@ -150,4 +150,6 @@ LOGIN_URL = '/login/'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+CSRF_TRUSTED_ORIGINS = ['https://deployment-hs0u.onrender.com']
+
 
