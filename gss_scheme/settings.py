@@ -27,7 +27,7 @@ SECRET_KEY = 'a14fcabb-36a9-4bb1-bf3c-e7d78f2dfc21'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['gss-scheme-2026.onrender.com','127.0.0.1','*']
+ALLOWED_HOSTS = ['deployment-hs0u.onrender.com','127.0.0.1']
 
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
@@ -147,4 +147,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/login/'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
 CRISPY_TEMPLATE_PACK = "bootstrap5"
