@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login - Scholarship Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white text-center">
+                <h2><i class="fa fa-user-circle" aria-hidden="true"></i> Login</h2>
+            </div>
+            <div class="card-body">
+
+                {% if not request.COOKIES.hide_login_note %}
+                <div id="guidance-note" class="alert alert-info text-center" role="alert">
+                    <strong>Note:</strong> Officers use your assigned credentials. Students, register to begin your application.
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="dont-show-again">
+                        <label class="form-check-label" for="dont-show-again">Don't show this message again</label>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary mt-2" onclick="dismissNote()">Dismiss</button>
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        {{ form.username.label_tag }}
+                        {{ form.username|add_class:"form-control" }}
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ form.password.label_tag }}
+                        {{ form.password|add_class:"form-control" }}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Login</button>
+
+                    <p class="mt-3 text-center">Don't have an account? <a href="{% url 'applications:signup' %}">Register here</a>.</p>
+                    <p class="mt-2 text-center"><a href="{% url 'applications:password_reset' %}">Forgot password?</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function dismissNote() {
+    const hide = document.getElementById('dont-show-again').checked;
+    document.getElementById('guidance-note').style.display = 'none';
+
+    if (hide) {
+        document.cookie = "hide_login_note=true; path=/; max-age=" + (60 * 60 * 24 * 30); // 30 days
+    }
+}
+</script>
+{% endblock %}

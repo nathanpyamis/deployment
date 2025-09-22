@@ -1,0 +1,85 @@
+<!-- templates/applications/officer_view_profile.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Applicant Profile</h2>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      {% if application.applicant.photo %}
+        <img src="{{ application.applicant.photo.url }}" alt="Profile Photo" class="img-thumbnail mb-3" style="max-width:150px;">
+      {% else %}
+        <p><em>No profile photo uploaded.</em></p>
+      {% endif %}
+
+      <p><strong>Name:</strong> {{ application.applicant.user.get_full_name }}</p>
+      <p><strong>Status:</strong> {{ application.status }}</p>
+      <p><strong>Institution:</strong> {{ application.institution.name }}</p>
+      <p><strong>Course:</strong> {{ application.course.name }}</p>
+
+      <!-- AI Reviewer Summary -->
+      <div class="mt-4">
+        <h5 class="mb-3">AI Reviewer Summary</h5>
+
+        <!-- Detected Items Table -->
+        <h6>✅ Items Detected</h6>
+        <table class="table table-bordered table-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Item</th>
+              <th>Status / Comment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Transcript</td><td>Found</td></tr>
+            <tr><td>GPA</td><td>Detected: <strong>0.0</strong> <span class="text-danger">⚠️ Below threshold</span></td></tr>
+            <tr><td>Grade 12 Certificate</td><td>Detected</td></tr>
+            <tr><td>Enrollment Proof</td><td>Detected</td></tr>
+            <tr><td>School Fee Structure</td><td>Detected</td></tr>
+            <tr><td>ID Document</td><td>Detected</td></tr>
+            <tr><td>Character Reference 1</td><td>Detected, includes contact info ✅</td></tr>
+            <tr><td>Character Reference 2</td><td>Detected, includes contact info ✅</td></tr>
+          </tbody>
+        </table>
+
+        <!-- Eligibility Overview -->
+        <h6>📊 Eligibility Overview</h6>
+        <table class="table table-bordered table-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Eligibility Score</td><td>6 / 7</td></tr>
+            <tr><td>Criteria Met</td><td>6 / 7</td></tr>
+          </tbody>
+        </table>
+
+        <!-- Flags Raised -->
+        <h6>📌 Flags Raised</h6>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-danger">⚠️ GPA below threshold</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mb-3">Submitted Documents</h4>
+  <div class="row">
+    {% for label, file in documents %}
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ label }}</label><br>
+        {% if file %}
+          <a href="{{ file.url }}" class="btn btn-outline-primary btn-sm" target="_blank">View Document</a>
+        {% else %}
+          <span class="text-muted">Not submitted</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <a href="{% url 'applications:officer_dashboard' %}" class="btn btn-secondary mt-4">← Back to Dashboard</a>
+</div>
+{% endblock %}

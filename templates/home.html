@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Welcome - Gerson Solulu Scholarship Scheme{% endblock %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+
+<!-- 🖼️ Image Header Section -->
+<!-- 🖼️ Responsive Image Header Section -->
+<div class="row mb-5">
+  <div class="col-12 col-md-10 mx-auto text-center">
+    <div class="responsive-header">
+      <img src="{% static 'img/headers.png' %}" alt="GSSS Header" class="img-fluid w-100" style="object-fit: cover; border: none;">
+    </div>
+    <hr>
+    <p class="text-muted mt-3">Live tally of 2026 applicants.</p>
+  </div>
+</div>
+
+
+<!-- 🧮 Stats Counter Section -->
+  <div class="row text-center mb-5">
+    <div class="col-md-3 offset-md-3">
+      <div class="bg-light p-4 rounded shadow-sm">
+        <h3 class="text-primary display-6">{{ total_applicants }}</h3>
+        <p class="text-muted">Total Applicants</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="bg-light p-4 rounded shadow-sm">
+        <h3 class="text-success display-6">{{ total_awarded }}</h3>
+        <p class="text-muted">Scholarships Awarded</p>
+      </div>
+    </div>
+  </div>
+
+<!-- 🏫 Institution Summary Preview -->
+<div class="row text-center mb-5">
+  <div class="col-md-10 mx-auto">
+    <h4 class="text-secondary mb-4">Top Institutions</h4>
+    <div class="row g-4">
+      {% for stat in institution_stats|slice:":3" %}
+      <div class="col-md-4">
+        <div class="bg-light p-4 rounded shadow-sm h-100">
+          <h5 class="text-dark">{{ stat.institution__name }}</h5>
+          <h3 class="text-primary">{{ stat.applicants }}</h3>
+          <p class="text-muted mb-1">Total Applicants</p>
+          <h4 class="text-success">{{ stat.awarded }}</h4>
+          <p class="text-muted">Scholarships Awarded</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- 🔘 View More Button -->
+    <div class="mt-4">
+      <a href="{% url 'institutions:institution_stats' %}" class="btn btn-outline-primary px-4">View All Institutions</a>
+    </div>
+  </div>
+</div>
+
+
+  <!-- 🧭 About Section -->
+  <div class="row mb-5">
+    <div class="col-md-10 mx-auto">
+      <div class="bg-white p-4 rounded shadow-sm">
+        <h2 class="text-center text-secondary mb-3">About the Scheme</h2>
+        <p class="text-muted">
+          The Gerson Solulu Scholarship Scheme was established to support students across Papua New Guinea who demonstrate academic potential and financial need. We believe education is the key to unlocking opportunity, and our mission is to make higher learning accessible to all.
+        </p>
+        <p class="text-muted">
+          Whether you're pursuing a degree in teaching, business, engineering, or the arts, our program is designed to help you succeed. We work closely with institutions and officers to ensure transparency, fairness, and impact.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💬 Testimonials Section -->
+  <div class="row mb-5">
+    <div class="col-md-10 mx-auto">
+      <h2 class="text-center text-secondary mb-4">What Our Scholars Say</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">“This scholarship changed my life. I’m now studying education at UPNG and helping my community.”</p>
+              <footer class="blockquote-footer">Maria K., Morobe Province</footer>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">“The application process was smooth, and the support from officers was incredible. Highly recommended.”</p>
+              <footer class="blockquote-footer">James T., Menyamya</footer>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">“Thanks to GSSS, I’m now pursuing my dream in business studies. The AI screening made it fast and fair.”</p>
+              <footer class="blockquote-footer">Lydia N., Wantoat</footer>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

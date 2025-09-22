@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">📄 MPG Scholarship Application</h1>
+
+    {% if applications %}
+        {% for item in applications %}
+            {% with app=item.app documents=item.documents %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-light">
+                    <strong>Application #{{ app.id }}</strong> — {{ app.institution.name }} / {{ app.course.name }}
+                </div>
+                <div class="card-body">
+                    <p><strong>Submitted:</strong> {{ app.submission_date|date:"d M Y" }}</p>
+                    <p><strong>Status:</strong>
+                        <span class="badge 
+                            {% if app.status == 'APPROVED' %} bg-success
+                            {% elif app.status == 'REJECTED' %} bg-danger
+                            {% else %} bg-warning text-dark {% endif %}">
+                            {% if app.status == 'APPROVED' %}✅ Approved
+                            {% elif app.status == 'REJECTED' %}❌ Rejected
+                            {% else %}⏳ Pending{% endif %}
+                        </span>
+                    </p>
+                    <p><strong>Reviewer Note:</strong> {{ app.reviewer_note|default:"—" }}</p>
+
+                    <!-- 📁 Document Summary -->
+                    <h6 class="mt-4">📁 Documents</h6>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light"><tr><th>Document</th><th>Status</th></tr></thead>
+                        <tbody>
+                            {% for label, doc in documents %}
+                            <tr>
+                                <td>{{ label }}</td>
+                                <td>{% if doc %}<span class="text-success">✅ Submitted</span>{% else %}<span class="text-danger">❌ Missing</span>{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!-- 💰 Payment Summary -->
+                    <h6 class="mt-4">💰 MPG Payment Summary</h6>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light"><tr><th>MPG Total</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>PGK {{ app.course.total_tuition_fee }}</td>
+                                <td>PGK {{ item.total_paid }}</td>
+                                <td>PGK {{ item.balance }}</td>
+                                <td>
+                                    {% if item.payment_status == 'Fully Paid' %}
+                                        <span class="text-success">✅ Fully Paid</span>
+                                    {% elif item.payment_status == 'Partially Paid' %}
+                                        <span class="text-warning">🟡 Partially Paid</span>
+                                    {% else %}
+                                        <span class="text-danger">❌ Unpaid</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endwith %}
+        {% endfor %}
+    {% else %}
+        <p class="text-center text-muted">You haven’t submitted any applications yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

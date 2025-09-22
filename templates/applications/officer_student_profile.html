@@ -1,0 +1,59 @@
+<!-- templates/applications/officer_student_profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}Student Profile - {{ application.applicant.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-start mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">{{ application.applicant.user.get_full_name|default:application.applicant.user.username }}</h1>
+            <p class="text-gray-600">{{ application.course.name }} at {{ application.institution.name }}</p>
+        </div>
+        <span class="px-3 py-1 text-sm font-semibold rounded-full
+            {% if application.status == 'APPROVED' %} bg-green-200 text-green-800
+            {% elif application.status == 'REJECTED' %} bg-red-200 text-red-800
+            {% else %} bg-yellow-200 text-yellow-800 {% endif %}">
+            {{ application.get_status_display }}
+        </span>
+    </div>
+
+    <!-- Applicant Details -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Academic Info -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-semibold text-blue-700 border-b pb-2">Academic Details</h2>
+            <p><strong>Institution:</strong> {{ application.institution.name }}</p>
+            <p><strong>Course:</strong> {{ application.course.name }}</p>
+            <p><strong>Year of Study:</strong> {{ application.year_of_study }}</p>
+            <p><strong>Tuition Fee:</strong> K{{ application.course.total_tuition_fee }}</p>
+            <p><strong>Submitted On:</strong> {{ application.submission_date|date:"F d, Y" }}</p>
+        </div>
+        
+        <!-- Uploaded Documents -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-semibold text-blue-700 border-b pb-2">Uploaded Documents</h2>
+            <ul class="list-disc list-inside text-blue-600">
+                <li><a href="{{ application.grade_12_certificate.url }}" target="_blank" class="hover:underline">Grade 12 Certificate</a></li>
+                <li><a href="{{ application.transcript.url }}" target="_blank" class="hover:underline">Academic Transcript</a></li>
+                <li><a href="{{ application.acceptance_letter.url }}" target="_blank" class="hover:underline">Acceptance Letter</a></li>
+                <li><a href="{{ application.school_fee_structure.url }}" target="_blank" class="hover:underline">School Fee Structure</a></li>
+                <li><a href="{{ application.id_card.url }}" target="_blank" class="hover:underline">Student ID Card</a></li>
+                <li><a href="{{ application.character_reference_1.url }}" target="_blank" class="hover:underline">Character Reference 1</a></li>
+                <li><a href="{{ application.character_reference_2.url }}" target="_blank" class="hover:underline">Character Reference 2</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-8 pt-6 border-t text-center">
+        <h2 class="text-xl font-semibold mb-4">Actions</h2>
+        <div class="flex justify-center gap-4">
+             <!-- You would need to create views/logic for these actions -->
+            <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">Approve</button>
+            <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Reject</button>
+            <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">Message Applicant</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

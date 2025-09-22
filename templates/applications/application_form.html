@@ -1,0 +1,143 @@
+<!-- templates/applications/application_form.html -->
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Scholarship Application</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Profile Photo Upload -->
+    <div class="mb-4">
+      <label for="photo" class="form-label">Upload Profile Photo</label>
+      <input type="file" name="photo" id="photo" class="form-control">
+    </div>
+
+    <!-- Academic Info -->
+    <div class="mb-4">
+      <label for="institution" class="form-label">Institution</label>
+      {{ form.institution|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      <label for="course" class="form-label">Course of Study</label>
+      {{ form.course|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      <label for="year_of_study" class="form-label">Current Year of Study</label>
+      {{ form.year_of_study|as_crispy_field }}
+    </div>
+<!-- 👨‍👩‍👧 Parents Financial Info -->
+<fieldset class="card card-body mb-4">
+  <legend>Parent Financial Information</legend>
+  <div class="form-check mb-3">
+    {{ form.parent_employed.label_tag }}
+    {{ form.parent_employed }}
+  </div>
+
+  <div id="parent-employed-fields" style="display: none;">
+    <div class="mb-3">{{ form.parent_company.label_tag }} {{ form.parent_company }}</div>
+    <div class="mb-3">{{ form.parent_job_title.label_tag }} {{ form.parent_job_title }}</div>
+    <div class="mb-3">{{ form.parent_salary_range.label_tag }} {{ form.parent_salary_range }}</div>
+  </div>
+
+  <div id="parent-unemployed-fields" style="display: none;">
+    <div class="mb-3">{{ form.parent_income_source.label_tag }} {{ form.parent_income_source }}</div>
+    <div class="mb-3">{{ form.parent_annual_income.label_tag }} {{ form.parent_annual_income }}</div>
+  </div>
+</fieldset>
+
+<!-- 👨‍🎓 Student Financial Info -->
+<fieldset class="card card-body mb-4">
+  <legend>Student Financial Information</legend>
+  <div class="form-check mb-3">
+    {{ form.student_employed.label_tag }}
+    {{ form.student_employed }}
+  </div>
+
+  <div id="student-employed-fields" style="display: none;">
+    <div class="mb-3">{{ form.student_company.label_tag }} {{ form.student_company }}</div>
+    <div class="mb-3">{{ form.student_job_title.label_tag }} {{ form.student_job_title }}</div>
+    <div class="mb-3">{{ form.student_salary_range.label_tag }} {{ form.student_salary_range }}</div>
+  </div>
+</fieldset>
+
+<!-- 🌍 Additional Student Info -->
+<fieldset class="card card-body mb-4">
+  <legend>Additional Student Information</legend>
+  <h6>Place of Origination</h6>
+  <div class="mb-3">{{ form.origin_province.label_tag }} {{ form.origin_province }}</div>
+  <div class="mb-3">{{ form.origin_district.label_tag }} {{ form.origin_district }}</div>
+  <div class="mb-3">{{ form.origin_ward.label_tag }} {{ form.origin_ward }}</div>
+
+  <h6 class="mt-4">Place of Residency</h6>
+  <div class="mb-3">{{ form.residency_province.label_tag }} {{ form.residency_province }}</div>
+  <div class="mb-3">{{ form.residency_district.label_tag }} {{ form.residency_district }}</div>
+  <div class="mb-3">{{ form.residency_ward.label_tag }} {{ form.residency_ward }}</div>
+  <div class="mb-3">{{ form.residency_years.label_tag }} {{ form.residency_years }}</div>
+</fieldset>
+
+    <!-- Document Uploads -->
+    <h5 class="mt-5">Required Documents</h5>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Grade 12 Certificate</label>
+        {{ form.grade_12_certificate|as_crispy_field }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Academic Transcript</label>
+        {{ form.transcript|as_crispy_field }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Acceptance Letter</label>
+        {{ form.acceptance_letter|as_crispy_field }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">School Fee Structure</label>
+        {{ form.school_fee_structure|as_crispy_field }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Student ID Card</label>
+        {{ form.id_card|as_crispy_field }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Character Reference 1</label>
+        {{ form.character_reference_1|as_crispy_field }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Character Reference 2</label>
+        {{ form.character_reference_2|as_crispy_field }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Expression of Interest Letter</label>
+        {{ form.expression_of_interest|as_crispy_field }}
+      </div>
+    </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary">Submit Application</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function toggleFields() {
+    const parentEmployed = document.getElementById("id_parent_employed").checked;
+    document.getElementById("parent-employed-fields").style.display = parentEmployed ? "block" : "none";
+    document.getElementById("parent-unemployed-fields").style.display = parentEmployed ? "none" : "block";
+
+    const studentEmployed = document.getElementById("id_student_employed").checked;
+    document.getElementById("student-employed-fields").style.display = studentEmployed ? "block" : "none";
+  }
+
+  document.getElementById("id_parent_employed").addEventListener("change", toggleFields);
+  document.getElementById("id_student_employed").addEventListener("change", toggleFields);
+  window.addEventListener("load", toggleFields);
+</script>
+
+
+{% endblock %}

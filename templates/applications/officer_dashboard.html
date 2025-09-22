@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}Officer Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">🎓 Scholarship Officer Dashboard</h1>
+
+    <!-- 🔍 Search Bar -->
+    <form method="get" class="mb-4 d-flex justify-content-center">
+        <input type="text" name="q" class="form-control w-50 me-2" placeholder="Search by applicant name or institution" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <!-- 📋 Applications Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>App ID</th>
+                    <th>Applicant Name</th>
+                    <th>Institution</th>
+                    <th>Course</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.id }}</td>
+                    <td>{{ app.applicant.user.get_full_name|default:app.applicant.user.username }}</td>
+                    <td>
+                        {% with stats=institution_stats|dict_lookup:app.institution.id %}
+                        <a href="#" class="text-decoration-none"
+                           data-bs-toggle="modal"
+                           data-bs-target="#institutionModal"
+                           data-url="{% url 'institutions:institution_modal' app.institution.id %}"
+                           data-bs-toggle="tooltip"
+                           title="📊 Summary&#10;👨‍🎓 Total: {{ stats.total }}&#10;✅ Approved: {{ stats.approved }}&#10;❌ Rejected: {{ stats.rejected }}&#10;⏳ Pending: {{ stats.pending }}">
+                            {{ app.institution.name }}
+                        </a>
+                        {% endwith %}
+                    </td>
+                    <td>{{ app.course.name }}</td>
+                    <td>{{ app.submission_date|date:"d M Y" }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if app.status == 'APPROVED' %} bg-success
+                            {% elif app.status == 'REJECTED' %} bg-danger
+                            {% else %} bg-warning text-dark {% endif %}" 
+                            data-bs-toggle="tooltip" title="Status: {{ app.get_status_display }}">
+                            {% if app.status == 'APPROVED' %}✅ Approved
+                            {% elif app.status == 'REJECTED' %}❌ Rejected
+                            {% else %}⏳ Pending{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'applications:officer_view_profile' app.pk %}" class="btn btn-sm btn-outline-primary">
+                            View Profile
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No applications found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 🧠 Institution Modal -->
+<div class="modal fade" id="institutionModal" tabindex="-1" aria-labelledby="institutionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="institutionModalLabel">Institution Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="institutionModalBody">
+        <p class="text-muted">Loading institution details...</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // ✅ Enable tooltips
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.forEach(function (el) {
+    new bootstrap.Tooltip(el);
+  });
+
+  // ✅ Load institution modal content via AJAX
+  const modal = document.getElementById('institutionModal');
+  modal.addEventListener('show.bs.modal', function (event) {
+    const link = event.relatedTarget;
+    const url = link.getAttribute('data-url');
+    const modalBody = modal.querySelector('#institutionModalBody');
+
+    modalBody.innerHTML = '<p class="text-muted">Loading institution details...</p>';
+
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        modalBody.innerHTML = html;
+      })
+      .catch((err) => {
+        modalBody.innerHTML = '<p class="text-danger">Failed to load institution details.</p>';
+      });
+  });
+});
+</script>
+{% endblock %}

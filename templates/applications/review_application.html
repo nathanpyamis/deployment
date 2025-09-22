@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Review Application{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>📄 Review Application: {{ application.applicant.user.get_full_name }}</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Institution:</strong> {{ application.institution.name }}</p>
+            <p><strong>Course:</strong> {{ application.course.name }}</p>
+            <p><strong>Submitted:</strong> {{ application.submission_date|date:"d M Y" }}</p>
+            <p><strong>Current Status:</strong> {{ application.get_status_display }}</p>
+            <hr>
+            <h5>🧠 AI Eligibility Summary</h5>
+            <pre class="bg-light p-3 border rounded">{{ application.ai_summary|default:"No summary available." }}</pre>
+
+            <hr>
+            <h5>📎 Uploaded Documents</h5>
+            {% for doc in application.documents.all %}
+                <a href="{{ doc.file.url }}" target="_blank">{{ doc.file.name }}</a><br>
+            {% empty %}
+                <p>No documents uploaded.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="status" class="form-label">Update Status</label>
+            <select name="status" id="status" class="form-select">
+                <option value="PENDING" {% if application.status == 'PENDING' %}selected{% endif %}>Pending</option>
+                <option value="APPROVED" {% if application.status == 'APPROVED' %}selected{% endif %}>Approved</option>
+                <option value="REJECTED" {% if application.status == 'REJECTED' %}selected{% endif %}>Rejected</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="reviewer_note" class="form-label">Reviewer Note</label>
+            <textarea name="reviewer_note" id="reviewer_note" rows="4" class="form-control">{{ application.reviewer_note }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Save Decision</button>
+        <a href="{% url 'applications:officer_dashboard' %}" class="btn btn-secondary ms-2">Back</a>
+    </form>
+</div>
+{% endblock %}

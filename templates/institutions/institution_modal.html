@@ -1,0 +1,36 @@
+<h5 class="fw-bold">{{ institution.name }}</h5>
+
+<!-- 📞 Contact Info -->
+<div class="mb-3">
+  <p><strong>📧 Email:</strong> {{ institution.email }}</p>
+  <p><strong>📞 Phone:</strong> {{ institution.phone }}</p>
+</div>
+
+<!-- 📊 Summary Stats -->
+<div class="mb-3">
+  <p><strong>👨‍🎓 Total Applicants:</strong> {{ stats.total }}</p>
+  <p><strong>✅ Approved:</strong> {{ stats.approved }}</p>
+  <p><strong>❌ Rejected:</strong> {{ stats.rejected }}</p>
+  <p><strong>⏳ Pending:</strong> {{ stats.pending }}</p>
+</div>
+
+<!-- 📋 Course Table -->
+<h6 class="mt-4">📘 Offered Courses</h6>
+<table class="table table-bordered table-sm mt-2">
+  <thead class="table-light">
+    <tr>
+      <th>Course</th>
+      <th>Total Fee (PGK)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in courses %}
+      <tr>
+        <td>{{ course.name }}</td>
+        <td>{{ course.total_tuition_fee }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="2" class="text-muted">No courses listed.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
