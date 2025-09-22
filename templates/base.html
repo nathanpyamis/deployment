@@ -24,47 +24,44 @@
  <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
   <div class="container">
-   <a class="navbar-brand" href="{% url 'applications:home' %}">
+    <a class="navbar-brand" href="{% url 'applications:home' %}">
       <img src="{% static 'img/logo.png' %}" alt="GSSS" height="40" class="d-inline-block align-text-top">
     </a>
-<div class="d-flex align-items-center ms-auto">
-  {% if user.is_authenticated %}
-    <div class="dropdown">
-      <button class="btn dropdown-toggle p-0 border-0 bg-transparent" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        <div class="position-relative" style="height: 40px; width: 40px;">
-          {% if profile.photo %}
-            <img src="{{ profile.photo.url }}" alt="Profile" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;">
-          {% else %}
-            <img src="{% static 'img/userlogo.jpg' %}" alt="Default" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;">
-          {% endif %}
-        
+
+    <div class="d-flex align-items-center ms-auto">
+      {% if user.is_authenticated %}
+        <div class="dropdown">
+          <button class="btn dropdown-toggle p-0 border-0 bg-transparent" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="position-relative" style="height: 40px; width: 40px;">
+              {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="Profile" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;">
+              {% else %}
+                <img src="{% static 'img/userlogo.jpg' %}" alt="Default" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;">
+              {% endif %}
+            </div>
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="profileDropdown" style="min-width: 220px;">
+            <li class="px-3 py-2 text-center">
+              {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="Profile" class="rounded-circle mb-2" style="height: 60px; width: 60px; object-fit: cover;">
+              {% else %}
+                <img src="{% static 'img/userlogo.jpg' %}" alt="Default" class="rounded-circle mb-2" style="height: 60px; width: 60px; object-fit: cover;">
+              {% endif %}
+              <div class="fw-bold">{{ user.get_full_name|default:user.username }}</div>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'applications:user_dashboard' %}">Dashboard</a></li>
+            <li><a class="dropdown-item" href="{% url 'applications:logout' %}">Logout</a></li>
+          </ul>
         </div>
-      </button>
-
-      <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="profileDropdown" style="min-width: 220px;">
-        <li class="px-3 py-2 text-center">
-          {% if profile.photo %}
-            <img src="{{ profile.photo.url }}" alt="Profile" class="rounded-circle mb-2" style="height: 60px; width: 60px; object-fit: cover;">
-          {% else %}
-            <img src="{% static 'img/userlogo.jpg' %}" alt="Default" class="rounded-circle mb-2" style="height: 60px; width: 60px; object-fit: cover;">
-          {% endif %}
-          <div class="fw-bold">{{ user.get_full_name|default:user.username }}</div>
-        </li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{% url 'applications:user_dashboard' %}">Dashboard</a></li>
-        <li><a class="dropdown-item" href="{% url 'applications:logout' %}">Logout</a></li>
-      </ul>
+      {% else %}
+        <a href="{% url 'applications:login' %}" class="btn btn-light me-2">Login</a>
+        <a href="{% url 'applications:register' %}" class="btn btn-outline-light">Register</a>
+      {% endif %}
     </div>
-  {% endif %}
-</div>
-
-
-
   </div>
 </nav>
-
-
-
   <!-- Main Content -->
   <main class="container py-5">
     {% if messages %}
@@ -93,3 +90,4 @@
 {% block scripts %}{% endblock %}
 </body>
 </html>
+
